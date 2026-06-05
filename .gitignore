@@ -1,0 +1,12 @@
+# Object files and build targets
+build/
+.cache/
+
+# Assignment Output Files
+*.csv
+output/
+
+# Secrets and Local Configurations
+.env
+config/secrets.json
+.DS_Store
