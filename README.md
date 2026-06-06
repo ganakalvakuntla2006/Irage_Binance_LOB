@@ -160,3 +160,36 @@ In a production HFT environment, WebSocket connections are not permanent; they d
 * **market_data_*.csv**: Raw audit trail of all inbound market events (pipe-delimited).
 * ***_orderbook.csv**: 26-column compliant state snapshots (comma-delimited).
 
+## 8. Submission
+
+### 1. Initialize and push repository
+```bash
+git init
+git add .
+git commit -m "Initialization"
+git remote add origin https://github.com/ganakalvakuntla2006/Irage_Binance_LOB.git
+git branch -M main
+git push -u origin main
+```
+
+### 2. .gitignore excludes build artifacts and secrets
+```bash
+# Object files and build targets
+build/
+.cache/
+
+# Assignment Output Files
+*.csv
+
+
+# Secrets and Local Configurations
+.env
+config/secrets.json
+.DS_Store
+```
+
+### 3. Tagging submission
+```bash
+git tag -a v1.0.0 -m "Submission v1.0.0"
+git push origin v1.0.0
+```
