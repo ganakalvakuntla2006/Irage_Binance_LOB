@@ -55,11 +55,14 @@ Configure the build directory and compile the project
 ```bash
 cmake -B build && cmake --build build
 ```
+![Build](./output/assets/build_snapshot.png)
+
 ### Test Capture (Timed)
 Run a short 300-second test to ensure the WebSocket connection is established and data is flowing
 ```bash
 ./build/binance_capture --venue spot --symbols BTCUSDT --duration 300
 ```
+![binance capture for 300 seconds](./output/assets/livecapture_300.png)
 
 ### Run Production Capture
 Execute the capture for target symbols and save the results to the output directory. Capture live data and save to the output folder
@@ -70,6 +73,7 @@ Execute the capture for target symbols and save the results to the output direct
   --symbols BTCUSDT \
   --output-dir ./output
 ```
+![binance capture for 1 min with manual interruption](./output/assets/livecapture_1min_ctrlC.png)
 
 This command generates two files: market_data_spot_BTCUSDT.csv (raw audit trail) and BTCUSDT_orderbook.csv (LOB snapshots).
 
@@ -89,6 +93,7 @@ Confirm the LOB snapshot file contains the expected 26 data columns
 ```bash
 awk -F',' 'NR==2{print NF}' ./output/BTCUSDT_orderbook.csv
 ```
+![Data inegrity](./output/assets/data_integrity.png)
 
 ## 5. Sample Run - Attached full CSV files for Deliverables A & B 
 Attached screenshots of CLI, attached CSV files for the sample run of 1 minute 
@@ -106,6 +111,7 @@ Attached screenshots of CLI, attached CSV files for the sample run of 1 minute
   --output-dir ./output \
   --duration 15
 ```
+![Live capture for 15 seconds to generate output csv's used for replay](./output/assets/livecapture_15sec_input_replay.png)
 
 ### Replay Mode 
 
@@ -118,6 +124,7 @@ Use the generated market_data_spot_BTCUSDT.csv to drive the replay. This forces 
   --output-dir ./replay_output \
   --replay ./output/market_data_spot_BTCUSDT.csv
 ```
+![Replay](./output/assets/replay_output.png)
 
 **[Replay CSV of 15 second live capture output](./replay_output/)**
 
