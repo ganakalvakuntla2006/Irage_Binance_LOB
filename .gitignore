@@ -4,7 +4,7 @@ build/
 
 # Assignment Output Files
 *.csv
-output/
+
 
 # Secrets and Local Configurations
 .env
