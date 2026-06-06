@@ -3,13 +3,16 @@
 #include <string>
 #include <atomic>
 #include <cstddef>
-
+template <typename T, size_t Capacity>
 class SpscRingBuffer {
 public:
     explicit SpscRingBuffer(size_t capacity = 65536) 
         : ring_data_(capacity), capacity_(capacity), head_(0), tail_(0) {}
+    bool is_empty() const {
+    return head_.load(std::memory_order_acquire) == tail_.load(std::memory_order_acquire);
+    }
 
-    // Pushed exclusively by the live network connection reader thread
+    // Pushed by the live network connection reader thread
     bool push(const std::string& raw_payload) {
         size_t current_tail = tail_.load(std::memory_order_relaxed);
         size_t next_tail = (current_tail + 1) % capacity_;
@@ -23,7 +26,7 @@ public:
         return true;
     }
 
-    // Popped exclusively by the main execution processing thread
+    // Popped by the main execution processing thread
     bool pop(std::string& output_payload) {
         size_t current_head = head_.load(std::memory_order_relaxed);
         
