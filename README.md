@@ -75,23 +75,23 @@ Execute the capture for target symbols and save the results to the output direct
 ```
 ![binance capture for 1 min with manual interruption](./output/assets/livecapture_1min_ctrlC.png)
 
-This command generates two files: market_data_spot_BTCUSDT.csv (raw audit trail) and BTCUSDT_orderbook.csv (LOB snapshots).
+This command generates two files: market_data_spot_BTCUSDT_2026-06-07.csv (raw audit trail) and market_data_spot_BTCUSDT_2026-06-07_orderbook.csv (LOB snapshots).
 
 ### Verify Data Integrity
 Use these commands to confirm that the generated files are formatted correctly and contain the expected data headers.
 
 Inspect the header and the first data row of the audit log
 ```bash
-head -2 ./output/market_data_spot_BTCUSDT.csv
+head -2 ./output/market_data_spot_BTCUSDT_2026-06-07.csv
 ```
 Inspect the header and the first data row of the LOB snapshot
 ```bash
-head -2 ./output/BTCUSDT_orderbook.csv
+head -2 ./output/market_data_spot_BTCUSDT_2026-06-07_orderbook.csv
 ```
 
 Confirm the LOB snapshot file contains the expected 26 data columns
 ```bash
-awk -F',' 'NR==2{print NF}' ./output/BTCUSDT_orderbook.csv
+awk -F',' 'NR==2{print NF}' ./output/market_data_spot_BTCUSDT_2026-06-07_orderbook.csv
 ```
 ![Data inegrity](./output/assets/data_integrity.png)
 
@@ -108,24 +108,25 @@ Attached screenshots of CLI, attached CSV files for the sample run of 1 minute
 ./build/binance_capture \
   --venue spot \
   --symbols BTCUSDT \
-  --output-dir ./output \
+  --output-dir ./15second_output \
   --duration 15
 ```
 ![Live capture for 15 seconds to generate output csv's used for replay](./output/assets/livecapture_15sec_input_replay.png)
 
 ### Replay Mode 
 
-Use the generated market_data_spot_BTCUSDT.csv to drive the replay. This forces your application to process the raw packets again, reconstructing the Order Book state in the ./replay_output directory.
+Use the generated market_data_spot_BTCUSDT_2026-06-07.csv to drive the replay. This forces your application to process the raw packets again, reconstructing the Order Book state in the ./replay_output directory.
 
 ```bash
 ./build/binance_capture \
   --venue binance \
   --symbols BTCUSDT \
   --output-dir ./replay_output \
-  --replay ./output/market_data_spot_BTCUSDT.csv
+  --replay ./15second_output/market_data_spot_BTCUSDT_2026-06-07.csv
 ```
 ![Replay](./output/assets/replay_output.png)
 
+**[Live capture ouptut CSV for 15 seconds](./15second_output/)**
 **[Replay CSV of 15 second live capture output](./replay_output/)**
 
 The console output confirms the success of the replay, including the number of messages processed and any errors encountered.
