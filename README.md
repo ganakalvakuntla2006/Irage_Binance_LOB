@@ -135,10 +135,10 @@ The project includes a suite of unit tests to validate the Order Book state-mach
 
 ```bash
 # Build the test suite
-cmake --build build --target tests
+cmake --build build --target unit_tests
 
 # Execute the unit tests
-./build/tests/unit_tests
+./build/unit_tests
 ```
 ![unit tests](./output/assets/unit_tests.png)
 
