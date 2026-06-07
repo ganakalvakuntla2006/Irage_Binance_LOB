@@ -54,12 +54,12 @@ std::vector<std::string> split_symbols(const std::string& s) {
 void process_json_object(const std::string& json, std::ofstream& market_csv, std::ofstream& ob_csv, 
                          const AppConfig& config, OrderBook& ob, uint64_t seq) {
     try {
-        // Tag every message with the exact time it was received
+        // Tagging every message with the exact time it was received
         auto now = std::chrono::system_clock::now().time_since_epoch();
         int64_t tsec = std::chrono::duration_cast<std::chrono::seconds>(now).count();
         int32_t tnsec = std::chrono::duration_cast<std::chrono::nanoseconds>(now).count() % 1000000000;
 
-        // Clean up the JSON to ensure it doesn't break CSV format
+        // Cleaning up the JSON to ensure it doesn't break CSV format
         std::string clean_json = "\"";
         for(char c : json) {
             if (c == '\n' || c == '\r' || c == '\0') continue;
@@ -68,10 +68,10 @@ void process_json_object(const std::string& json, std::ofstream& market_csv, std
         }
         clean_json += "\"";
         
-        // Pass the raw data into our OrderBook to keep the internal state current
+        // Passing the raw data into our OrderBook to keep the internal state current
         ob.update(json);
 
-        // Save everything to the master audit file for later replay/analysis
+        // Saving everything to the master audit file for later replay/analysis
         market_csv << tsec << "|" << tnsec << "|" << config.venue << "|depth|0|0|" << seq 
                    << "|" << config.symbols[0] << "|" << clean_json << "\n";
 

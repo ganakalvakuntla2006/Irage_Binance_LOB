@@ -37,7 +37,7 @@ void OrderBook::update(const std::string& json) {
     // Find the end of the list ]
     size_t list_end = json.find("]", list_start); 
     
-    // If the list is empty e.g. "bids":[]
+    // If the list is empty like bids:[]
     if (json.substr(list_start + 1, 1) == "]") return;
 
     // Scan through the list

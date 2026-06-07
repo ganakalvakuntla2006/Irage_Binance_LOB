@@ -4,7 +4,7 @@
 TEST(OrderBookTest, HandlesBidUpdate) {
     OrderBook ob;
     
-    // Removing all spaces to be safe
+    // Removing all spaces
     std::string json = "{\"bids\":[[\"100.50\",\"10.0\"]],\"asks\":[]}";
     
     ob.update(json);
@@ -18,7 +18,7 @@ TEST(OrderBookTest, HandlesBidUpdate) {
     EXPECT_TRUE(ob.has_changed()); 
     EXPECT_TRUE(output.find("10050000000") != std::string::npos);
 }
-// 1. Verify that empty JSON updates don't crash or corrupt the book
+// Verify that empty JSON updates don't crash or corrupt the book
 TEST(OrderBookTest, HandlesEmptyUpdate) {
     OrderBook ob;
     std::string json = "{\"bids\":[], \"asks\":[]}";
@@ -29,7 +29,7 @@ TEST(OrderBookTest, HandlesEmptyUpdate) {
     EXPECT_TRUE(output.find("10050000000") == std::string::npos);
 }
 
-// 2. Verify that quantity 0.0 effectively removes the price level
+// Verify that quantity 0.0 effectively removes the price level
 TEST(OrderBookTest, HandlesDeleteLevel) {
     OrderBook ob;
     

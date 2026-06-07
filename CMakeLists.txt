@@ -32,7 +32,7 @@ target_link_libraries(binance_capture
     OpenSSL::SSL 
     pthread
 )
-# --- Test Suite Configuration ---
+# Test Suite Configuration 
 enable_testing()
 
 add_executable(unit_tests 
