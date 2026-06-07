@@ -127,6 +127,7 @@ Use the generated market_data_spot_BTCUSDT_2026-06-07.csv to drive the replay. T
 ![Replay](./output/assets/replay_output.png)
 
 **[Live capture ouptut CSV for 15 seconds](./15second_output/)**
+
 **[Replay CSV of 15 second live capture output](./replay_output/)**
 
 The console output confirms the success of the replay, including the number of messages processed and any errors encountered.
