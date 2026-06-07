@@ -18,7 +18,7 @@ C++ engine to capture real-time Binance market data, maintain a synchronized Loc
 * **Compiler:** GCC 14 (or compatible C++17 compiler)
 * **Standard:** C++17
 * **Build System:** `cmake`, `ninja-build`
-* **Dependencies:** `libssl-dev`, `libboost-all-dev`, `zlib1g-dev`
+* **Dependencies:** `libssl-dev`, `libboost-all-dev`, `zlib1g-dev`, `googletest`
 
 ### Compilation
 ```bash
@@ -130,7 +130,19 @@ Use the generated market_data_spot_BTCUSDT.csv to drive the replay. This forces 
 
 The console output confirms the success of the replay, including the number of messages processed and any errors encountered.
 
-## 6. Operational Policies (Market-Data Literacy)
+## 6. Tests
+The project includes a suite of unit tests to validate the Order Book state-machine logic.
+
+```bash
+# Build the test suite
+cmake --build build --target tests
+
+# Execute the unit tests
+./build/tests/unit_tests
+```
+![unit tests](./output/assets/unit_tests.png)
+
+## 7. Operational Policies (Market-Data Literacy)
 
 ### Timestamp & Scaling Policy
 
@@ -152,7 +164,7 @@ In a production HFT environment, WebSocket connections are not permanent; they d
 
 * **Why this approach?** In trading, an inaccurate order book is more dangerous than no order book at all. By forcing a clean reset on any sequence discrepancy or connection reset, I guarantee that the snapshots emitted to `*_orderbook.csv` are always mathematically sound and representative of the exchange's true state.
 
-## 7. File Structure
+## 8. File Structure
 * **main.cpp**: Orchestration layer, signal handling, and core processing loop.
 * **order_book.hpp/cpp**: Core LOB logic, price/size map management, and 26-column CSV formatting.
 * **ring_buffer.hpp**: Lock-free SPSC buffer facilitating high-throughput data transfer.
@@ -160,7 +172,7 @@ In a production HFT environment, WebSocket connections are not permanent; they d
 * **market_data_*.csv**: Raw audit trail of all inbound market events (pipe-delimited).
 * ***_orderbook.csv**: 26-column compliant state snapshots (comma-delimited).
 
-## 8. Submission
+## 9. Submission
 
 ### 1. Initialize and push repository
 ```bash
