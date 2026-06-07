@@ -16,6 +16,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -O2 -pthread")
 # Locate System Dependencies 
 find_package(Boost REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(GTest REQUIRED)
+include(GoogleTest)
 
 include_directories(include ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR})
 
@@ -30,3 +32,13 @@ target_link_libraries(binance_capture
     OpenSSL::SSL 
     pthread
 )
+# --- Test Suite Configuration ---
+enable_testing()
+
+add_executable(unit_tests 
+    tests/unit_tests.cpp
+    src/order_book.cpp # Linking engine logic to the tests
+)
+
+target_link_libraries(unit_tests GTest::gtest_main)
+gtest_discover_tests(unit_tests)

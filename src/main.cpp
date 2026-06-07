@@ -15,10 +15,21 @@
 #include "websocket_client.hpp"
 #include "order_book.hpp"
 #include <csignal>
-
+#include <iomanip>
+#include <ctime>
 // Global flags to control program execution and track performance
 std::atomic<bool> g_running{true};
 RuntimeMetrics g_metrics;
+
+std::string get_utc_date() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_c = std::chrono::system_clock::to_time_t(now);
+    std::tm utc_tm = *std::gmtime(&now_c);
+    
+    std::stringstream ss;
+    ss << std::put_time(&utc_tm, "%Y-%m-%d");
+    return ss.str();
+}
 
 // Capture system interrupts (Ctrl+C) to trigger shutdown
 void signal_handler(int signal) {
@@ -147,8 +158,18 @@ int main(int argc, char* argv[]) {
     std::filesystem::create_directories(config.output_dir);
     
     // Prepare files for recording incoming data
-    std::ofstream market_csv(config.output_dir + "/market_data_" + config.venue + "_" + config.symbols[0] + ".csv");
-    std::ofstream ob_csv(config.output_dir + "/" + config.symbols[0] + "_orderbook.csv");
+    std::string utc_date = get_utc_date();
+    
+    std::string market_filename = config.output_dir + "/market_data_" + config.venue + "_" + 
+                                  config.symbols[0] + "_" + utc_date + ".csv";
+    
+    std::string ob_filename = config.output_dir + "/market_data_" + config.venue + "_" + 
+                              config.symbols[0] + "_" + utc_date + "_orderbook.csv";
+
+    std::ofstream market_csv(market_filename);
+    std::ofstream ob_csv(ob_filename);
+    //std::ofstream market_csv(config.output_dir + "/market_data_" + config.venue + "_" + config.symbols[0] + ".csv");
+    //std::ofstream ob_csv(config.output_dir + "/" + config.symbols[0] + "_orderbook.csv");
 
     market_csv << "recv_tsec,recv_tnsec,venue,stream_kind,shard_id,conn_epoch,conn_seq,symbol,payload_json\n";
     ob_csv << "tsec,tnsec,seqNo,id,type,side,bid0,bid1,bid2,bid3,bid4,bid_size0,bid_size1,bid_size2,bid_size3,bid_size4,ask0,ask1,ask2,ask3,ask4,ask_size0,ask_size1,ask_size2,ask_size3,ask_size4\n";

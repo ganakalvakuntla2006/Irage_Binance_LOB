@@ -29,37 +29,37 @@ int64_t OrderBook::parse_fixed_point(const std::string& value_str) {
 // Manually extract price/size data from the raw JSON string without heavy libraries
 void OrderBook::update(const std::string& json) {
     auto parse_list = [&](const std::string& key, bool is_bid) {
-        size_t pos = json.find("\"" + key + "\":");
-        if (pos == std::string::npos) return;
-        
-        pos = json.find("[[", pos);
-        size_t end = json.find("]]", pos);
-        if (pos == std::string::npos || end == std::string::npos) return;
+    size_t key_pos = json.find("\"" + key + "\":");
+    if (key_pos == std::string::npos) return;
+    
+    // Find the start of the list [
+    size_t list_start = json.find("[", key_pos);
+    // Find the end of the list ]
+    size_t list_end = json.find("]", list_start); 
+    
+    // If the list is empty e.g. "bids":[]
+    if (json.substr(list_start + 1, 1) == "]") return;
 
-        std::string list_str = json.substr(pos + 2, end - pos - 2);
+    // Scan through the list
+    size_t current = list_start;
+    while ((current = json.find("[", current + 1)) != std::string::npos && current < list_end) {
+        size_t pair_end = json.find("]", current);
+        std::string pair = json.substr(current + 1, pair_end - current - 1);
         
-        // Loop through comma-separated pairs inside the JSON list
-        size_t start = 0;
-        while (start < list_str.length()) {
-            size_t pair_end = list_str.find("]", start);
-            if (pair_end == std::string::npos) break;
+        size_t comma = pair.find(",");
+        if (comma != std::string::npos) {
+            std::string p = pair.substr(0, comma);
+            std::string s = pair.substr(comma + 1);
             
-            std::string pair = list_str.substr(start, pair_end - start);
-            size_t comma = pair.find(",");
-            if (comma != std::string::npos) {
-                std::string p = pair.substr(0, comma);
-                std::string s = pair.substr(comma + 1);
-                
-                // Remove quotes that often wrap JSON numbers
-                p.erase(std::remove(p.begin(), p.end(), '\"'), p.end());
-                s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
-                
-                // Update our map with the cleaned values
-                update_level(p, s, is_bid);
-            }
-            start = pair_end + 3; // Jump to the start of the next pair
+            // Clean quotes
+            p.erase(std::remove(p.begin(), p.end(), '\"'), p.end());
+            s.erase(std::remove(s.begin(), s.end(), '\"'), s.end());
+            
+            update_level(p, s, is_bid);
         }
-    };
+        current = pair_end;
+    }
+};
 
     parse_list("bids", true);
     parse_list("asks", false);
