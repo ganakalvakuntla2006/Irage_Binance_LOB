@@ -93,7 +93,7 @@ Confirm the LOB snapshot file contains the expected 26 data columns
 ```bash
 awk -F',' 'NR==2{print NF}' ./output/market_data_spot_BTCUSDT_2026-06-07_orderbook.csv
 ```
-![Data inegrity](./output/assets/data_integrity.png)
+![Data inegrity](./output/assets/awk.png)
 
 ## 5. Sample Run - Attached full CSV files for Deliverables A & B 
 Attached screenshots of CLI, attached CSV files for the sample run of 1 minute 
@@ -111,7 +111,7 @@ Attached screenshots of CLI, attached CSV files for the sample run of 1 minute
   --output-dir ./15second_output \
   --duration 15
 ```
-![Live capture for 15 seconds to generate output csv's used for replay](./output/assets/livecapture_15sec_input_replay.png)
+
 
 ### Replay Mode 
 
